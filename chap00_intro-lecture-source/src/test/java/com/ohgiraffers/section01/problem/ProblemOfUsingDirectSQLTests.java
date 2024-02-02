@@ -13,6 +13,7 @@ class ProblemOfUsingDirectSQLTests {
 
     @BeforeEach
     void setConnection() throws SQLException, ClassNotFoundException {
+        // 테스트
 
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/menudb";
