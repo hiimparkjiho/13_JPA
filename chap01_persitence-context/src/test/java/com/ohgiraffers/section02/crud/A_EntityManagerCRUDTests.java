@@ -77,7 +77,7 @@ public class A_EntityManagerCRUDTests {
         Menu menu = entityManager.find(Menu.class, 2);
         System.out.println("menu = " + menu);
 
-        String menuNameToChange = "갈치스무디2";
+        String menuNameToChange = "갈치스무디3";
 
         // when
         EntityTransaction entityTransaction = entityManager.getTransaction();
