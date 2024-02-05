@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.transaction.Transaction;
 import org.junit.jupiter.api.*;
 
 public class A_EntityLifeCycleTests {
@@ -168,14 +169,15 @@ public class A_EntityLifeCycleTests {
         * */
 
         // given
-        Menu foundMenu = entityManager.find(Menu.class, 2);
+        Menu foundMenu = entityManager.find(Menu.class, 4);
 
         // when
+
         entityManager.remove(foundMenu);
 
-        Menu refoundMenu = entityManager.find(Menu.class, 2);
+        Menu refoundMenu = entityManager.find(Menu.class, 4);
 
-        Assertions.assertEquals(2, foundMenu.getMenuCode());
+        Assertions.assertEquals(4, foundMenu.getMenuCode());
         Assertions.assertEquals(null, refoundMenu);
     }
 
@@ -188,12 +190,12 @@ public class A_EntityLifeCycleTests {
     @Test
     void 병합_merge_수정_테스트(){
         // given
-        Menu menuToDetach = entityManager.find(Menu.class, 3);
+        Menu menuToDetach = entityManager.find(Menu.class, 4);
         entityManager.detach(menuToDetach);
 
         //when
         menuToDetach.setMenuName("수박죽");
-        Menu refoundMenu = entityManager.find(Menu.class, 3);
+        Menu refoundMenu = entityManager.find(Menu.class, 4);
 
         // 준영속 엔티티와 영속 엔티티의 해쉬코드는 다른 상태이다.
         System.out.println(menuToDetach.hashCode());
@@ -201,18 +203,18 @@ public class A_EntityLifeCycleTests {
 
         entityManager.merge(menuToDetach);
         //then
-        Menu mergedMenu = entityManager.find(Menu.class, 3);
+        Menu mergedMenu = entityManager.find(Menu.class, 4);
         Assertions.assertEquals("수박죽", mergedMenu.getMenuName());
     }
 
     @Test
     void 병합_merge_삽입_테스트(){
         //given
-        Menu menuToDetach = entityManager.find(Menu.class, 3); // PK가 3번인 메뉴 조회
+        Menu menuToDetach = entityManager.find(Menu.class, 4); // PK가 3번인 메뉴 조회
         entityManager.detach(menuToDetach); // 조회한 메뉴를 준영속화
 
         //when
-        menuToDetach.setMenuCode(995);
+        menuToDetach.setMenuCode(996);
         menuToDetach.setMenuName("수박죽");
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
@@ -220,7 +222,7 @@ public class A_EntityLifeCycleTests {
         transaction.commit();
 
         //then
-        Menu mergedMenu = entityManager.find(Menu.class, 995);
+        Menu mergedMenu = entityManager.find(Menu.class, 996);
         Assertions.assertEquals("수박죽", mergedMenu.getMenuCode());
     }
 
